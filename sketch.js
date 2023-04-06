@@ -33,6 +33,7 @@ function draw() {
 
 function update_all() {
   for(let i = 0; i < rockets.length; i++) {
+    if (!rockets[i].isReady) continue;
     if (rockets[i].isRunning()) {
       rockets[i].move();
       rockets[i].display();
@@ -93,26 +94,35 @@ function keyPressed() {
     //   rockets = [...rockets, new_rocket]
     // }, 100 * i)
     // update_all()
-    // for(let j = 0; j < rockets.length; j++) {
-    //   if (rockets[j].isRunning()) {
-    //     rockets[j].move();
-    //     rockets[j].display();
-    //   } else if (!rockets[j].isBlown()) {
-    //     rockets[j].blowUp();
-    //   }
-    // }
     if (i % 3 == 0) {
-      for(let i = 0; i < rockets.length; i++) {
-        console.log(`${i}th rocket being updated`)
-        if (!rockets[i].isReady) continue;
-        if (rockets[i].isRunning()) {
-          rockets[i].move();
-          rockets[i].display();
-        } else if (!rockets[i].isBlown()) {
-          rockets[i].blowUp();
+      for(let j = 0; j < rockets.length; j++) {
+        console.log(`${j}th rocket being updated`)
+        if (!rockets[j].isReady()) {
+          console.log(`rocket number ${j} is not ready.`);
+          continue;
+        }
+        if (rockets[j].isRunning()) {
+          console.log(`rocket number ${j} is running.`);
+          rockets[j].move();
+          rockets[j].display();
+        } else if (!rockets[j].isBlown()) {
+          console.log(`rocket number ${j} is ready to be blown up.`);
+          rockets[j].blowUp();
         }
       }
     }
+    // if (i % 3 == 0) {
+    //   for(let i = 0; i < rockets.length; i++) {
+    //     console.log(`${i}th rocket being updated`)
+    //     if (!rockets[i].isReady) continue;
+    //     if (rockets[i].isRunning()) {
+    //       rockets[i].move();
+    //       rockets[i].display();
+    //     } else if (!rockets[i].isBlown()) {
+    //       rockets[i].blowUp();
+    //     }
+    //   }
+    // }
     console.log('after update')
   }
 }
