@@ -104,6 +104,7 @@ function keyPressed() {
     if (i % 3 == 0) {
       for(let i = 0; i < rockets.length; i++) {
         console.log(`${i}th rocket being updated`)
+        if (!rockets[i].isReady) continue;
         if (rockets[i].isRunning()) {
           rockets[i].move();
           rockets[i].display();
@@ -128,6 +129,10 @@ class Rocket {
     this.state = 0; // 0: not initialized, 1: launched, 2: stopped, 3: blown
     createImg(p, `test${x}`, 'anonymous', img => {this.e = img; this.state = 1})
     createImg(f, `fire${x}`, 'anonymous', img => {this.el = img; this.el.size(64, 64); this.el.hide()})
+  }
+
+  isReady() {
+    return this.state != 0
   }
 
   isRunning() {
