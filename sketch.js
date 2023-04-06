@@ -18,8 +18,6 @@ function setup() {
   for (let i = 0; i < sounds.length; i++) {
     sounds[i].playMode('sustain')
   } 
-
-  userStartAudio();
 }
 
 function draw() { 
@@ -47,6 +45,7 @@ function update_all() {
 
 let start, end
 function mousePressed() {
+  userStartAudio();
   start = millis()
 }
 
