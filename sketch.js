@@ -81,8 +81,10 @@ function keyPressed() {
   let last_tick = millis()
   let i = 0;
   while(i < count) {
-    if (millis() - last_tick > 200) {
-      new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
+    now_tick = millis()
+    console.log(now_tick - last_tick)
+    if (now_tick - last_tick > 200) {
+      new_rocket = new Rocket(randXs[i], randYs[i], 5, 500)
       rockets = [...rockets, new_rocket]
       last_tick = millis()
       i += 1
