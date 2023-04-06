@@ -37,8 +37,11 @@ function update_all() {
     if (rockets[i].isRunning()) {
       rockets[i].move();
       rockets[i].display();
-    } else if (!rockets[i].isBlown()) {
+    } else if (rockets[i].isStopped()) {
       rockets[i].blowUp();
+    } else if (rockets[i].isBlownUp()) {
+      rockets.splice(i, 1);
+      console.log(`removed rocket number ${i} after blowing up.`)
     }
   }
 }
@@ -102,12 +105,15 @@ function keyPressed() {
           continue;
         }
         if (rockets[j].isRunning()) {
-          console.log(`rocket number ${j} is running.`);
           rockets[j].move();
           rockets[j].display();
-        } else if (!rockets[j].isBlown()) {
-          console.log(`rocket number ${j} is ready to be blown up.`);
+          console.log(`rocket number ${j} is running.`);
+        } else if (rockets[j].isStopped()) {
           rockets[j].blowUp();
+          console.log(`rocket number ${j} is stopped and ready to be blown up.`)
+        } else if (rockets[j].isBlownUp()) {
+          rockets.splice(j, 1);
+          console.log(`removed rocket number ${j} after blowing up.`)
         }
       }
     }
@@ -149,7 +155,11 @@ class Rocket {
     return this.state == 1
   }
 
-  isBlown() {
+  isStopped() {
+    return this.state == 2
+  }
+
+  isBlownUp() {
     return this.state == 3
   }
 
