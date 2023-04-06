@@ -77,20 +77,23 @@ function keyPressed() {
     // if 3 is pressed, launch from left to right
     randXs.sort((a, b) => a >= b)
   }
-  let new_rocket
-  let last_tick = millis()
-  let i = 0;
-  while(i < count) {
-    now_tick = millis()
-    console.log(now_tick - last_tick)
-    if (now_tick - last_tick > 200) {
-      new_rocket = new Rocket(randXs[i], randYs[i], 5, 500)
-      rockets = [...rockets, new_rocket]
-      last_tick = millis()
-      i += 1
-    }
-    update_all();
-  }
+  console.log(randXs)
+  console.log(randYs)
+  batchLaunch(0, randXs, randYs);
+  // let new_rocket
+  // let last_tick = millis()
+  // let i = 0;
+  // while(i < count) {
+  //   now_tick = millis()
+  //   console.log(now_tick - last_tick)
+  //   if (now_tick - last_tick > 200) {
+  //     new_rocket = new Rocket(randXs[i], randYs[i], 5, 500)
+  //     rockets = [...rockets, new_rocket]
+  //     last_tick = millis()
+  //     i += 1
+  //   }
+  //   update_all();
+  // }
   // for (let i = 0; i < count; i++) {
   //   rockets = [...rockets, new Rocket(randXs[i], randYs[i], 5, 100)]
   //   console.log(rockets.length)
@@ -129,6 +132,15 @@ function keyPressed() {
     // }
   //   console.log('after update')
   // }
+}
+
+function batchLaunch(i, x_arr, y_arr) {
+  if (i >= x_arr.length) return;
+  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500)
+  rockets = [...rockets, new_rocket]
+  setTimeout(() => {
+    batchLaunch(i + 1, x_arr, y_arr);
+  }, 200)
 }
 
 class Rocket {
