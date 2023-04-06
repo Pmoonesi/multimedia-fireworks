@@ -15,9 +15,9 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(0);
 
-  for (let i = 0; i < sounds.length; i++) {
-    sounds[i].playMode('sustain')
-  } 
+  // for (let i = 0; i < sounds.length; i++) {
+  //   sounds[i].playMode('sustain')
+  // } 
 }
 
 function draw() { 
@@ -45,7 +45,6 @@ function update_all() {
 
 let start, end
 function mousePressed() {
-  userStartAudio();
   start = millis()
 }
 
