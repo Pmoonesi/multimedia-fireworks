@@ -136,7 +136,7 @@ class Rocket {
     this.e.remove();
     // this.el.position(this.x, this.y);
     // this.el.show();
-    track = Math.floor(random(sounds.length));
+    let track = Math.floor(random(sounds.length));
     console.log(track);
     console.log(sounds);
     sounds[track].play();
