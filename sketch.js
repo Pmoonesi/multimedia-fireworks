@@ -19,6 +19,7 @@ function setup() {
     sounds[i].playMode('sustain')
   } 
 
+  userStartAudio();
 }
 
 function draw() { 
