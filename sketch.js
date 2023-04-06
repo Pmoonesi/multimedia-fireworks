@@ -136,7 +136,8 @@ class Rocket {
     this.e.remove()
     // this.el.position(this.x, this.y);
     // this.el.show();
-    sounds[0].play();
+    track = Math.floor(random(sounds.length))
+    sounds[track].play();
     push()
     translate(this.x, this.y)
     fill(255, 255, 0)
