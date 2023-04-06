@@ -67,7 +67,7 @@ function keyPressed() {
   let count = 10
   for (let i = 0; i < count; i++) {
     randXs = [...randXs, random(width)]
-    randYs = [...randYs, 50 + random(200)]
+    randYs = [...randYs, (height - 50) - random(100)]
   }
   // if 1 is pressed, 10 to 20 random rockets are launched
   if (key == '2') {
@@ -81,7 +81,7 @@ function keyPressed() {
   let last_tick = millis()
   let i = 0;
   while(i < count) {
-    if (millis() - last_tick > 2000) {
+    if (millis() - last_tick > 200) {
       new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
       rockets = [...rockets, new_rocket]
       last_tick = millis()
