@@ -78,45 +78,41 @@ function keyPressed() {
     randXs.sort((a, b) => a >= b)
   }
   let new_rocket
-  // let last_tick = millis()
-  // let i = 0;
-  // while(i < count) {
-  //   if (millis() - last_tick > 10) {
-  //     new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
-  //     rockets = [...rockets, new_rocket]
-  //     last_tick = millis()
-  //     i += 1
-  //   }
-  // }
-  // console.log('hi');
-  for (let i = 0; i < count; i++) {
-    rockets = [...rockets, new Rocket(randXs[i], randYs[i], 5, 100)]
-    console.log(rockets.length)
-    console.log(rockets)
-    // setTimeout(() => {
-    //   rockets = [...rockets, new_rocket]
-    // }, 100 * i)
-    // update_all()
-    if (i % 3 == 0) {
-      for(let j = 0; j < rockets.length; j++) {
-        console.log(`${j}th rocket being updated`)
-        if (!rockets[j].isReady()) {
-          console.log(`rocket number ${j} is not ready.`);
-          continue;
-        }
-        if (rockets[j].isRunning()) {
-          rockets[j].move();
-          rockets[j].display();
-          console.log(`rocket number ${j} is running.`);
-        } else if (rockets[j].isStopped()) {
-          rockets[j].blowUp();
-          console.log(`rocket number ${j} is stopped and ready to be blown up.`)
-        } else if (rockets[j].isBlownUp()) {
-          rockets.splice(j, 1);
-          console.log(`removed rocket number ${j} after blowing up.`)
-        }
-      }
+  let last_tick = millis()
+  let i = 0;
+  while(i < count) {
+    if (millis() - last_tick > 10) {
+      new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
+      rockets = [...rockets, new_rocket]
+      last_tick = millis()
+      i += 1
     }
+    update_all();
+  }
+  // for (let i = 0; i < count; i++) {
+  //   rockets = [...rockets, new Rocket(randXs[i], randYs[i], 5, 100)]
+  //   console.log(rockets.length)
+  //   console.log(rockets)
+    // if (i % 3 == 0) {
+    //   for(let j = 0; j < rockets.length; j++) {
+    //     console.log(`${j}th rocket being updated`)
+    //     if (!rockets[j].isReady()) {
+    //       console.log(`rocket number ${j} is not ready.`);
+    //       continue;
+    //     }
+    //     if (rockets[j].isRunning()) {
+    //       rockets[j].move();
+    //       rockets[j].display();
+    //       console.log(`rocket number ${j} is running.`);
+    //     } else if (rockets[j].isStopped()) {
+    //       rockets[j].blowUp();
+    //       console.log(`rocket number ${j} is stopped and ready to be blown up.`)
+    //     } else if (rockets[j].isBlownUp()) {
+    //       rockets.splice(j, 1);
+    //       console.log(`removed rocket number ${j} after blowing up.`)
+    //     }
+    //   }
+    // }
     // if (i % 3 == 0) {
     //   for(let i = 0; i < rockets.length; i++) {
     //     console.log(`${i}th rocket being updated`)
@@ -129,8 +125,8 @@ function keyPressed() {
     //     }
     //   }
     // }
-    console.log('after update')
-  }
+  //   console.log('after update')
+  // }
 }
 
 class Rocket {
