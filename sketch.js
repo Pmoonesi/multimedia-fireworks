@@ -132,7 +132,7 @@ function keyPressed() {
 class Rocket {
   constructor(x, y, ySpeed, launchRange) {
     this.e = null;
-    this.el = null;
+    // this.el = null;
     this.baseX = x;
     this.x = x;
     this.y = y;
@@ -140,7 +140,7 @@ class Rocket {
     this.launchRange = launchRange;
     this.state = 0; // 0: not initialized, 1: launched, 2: stopped, 3: blown
     createImg(p, `test${x}`, 'anonymous', img => {this.e = img; this.state = 1})
-    createImg(f, `fire${x}`, 'anonymous', img => {this.el = img; this.el.size(64, 64); this.el.hide()})
+    // createImg(f, `fire${x}`, 'anonymous', img => {this.el = img; this.el.size(64, 64); this.el.hide()})
   }
 
   isReady() {
@@ -176,15 +176,15 @@ class Rocket {
   blowUp() {
     this.state = 3
     this.e.remove()
-    this.el.position(this.x, this.y);
-    this.el.show();
+    // this.el.position(this.x, this.y);
+    // this.el.show();
     push()
     translate(this.x, this.y)
     fill(255, 255, 0)
     rect(0, 0, 65, 65)
     pop()
     setTimeout(() => {
-      this.el.remove()
+      // this.el.remove()
       push()
       translate(this.x, this.y)
       fill(0)
@@ -193,22 +193,3 @@ class Rocket {
     }, 1000)
   }
 }
-
-// throw rockets and blow
-// speed, height, explosion range is variable
-// sound of explosion
-// throw rocket on click
-// throw higher if button is held down
-// keyboard event handler
-// random numbers
-// rockets move vertically and horizontally
-
-// https://genekogan.com/code/p5js-transformations/
-// https://blog.logrocket.com/creating-animations-p5-js/
-// https://editor.p5js.org/dirkk0/sketches/q4Y5HzOYC
-// https://p5js.org/reference/#/p5/translate
-// https://p5js.org/reference/#/p5/image
-// https://p5js.org/examples/
-
-// class based animation
-// https://codepen.io/sharur7/project/editor/ZWrNEw
