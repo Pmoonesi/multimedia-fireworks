@@ -19,8 +19,8 @@ function setup() {
     sounds[i].playMode('sustain')
   } 
 
-  console.log('hi');
-  console.error('pls');
+  // console.log('hi');
+  // console.error('pls');
 }
 
 function draw() { 
@@ -84,10 +84,11 @@ function keyPressed() {
   //     i += 1
   //   }
   // }
-  console.log('hi');
+  // console.log('hi');
   for (let i = 0; i < count; i++) {
-    new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
-    rockets = [...rockets, new_rocket]
+    rockets = [...rockets, new Rocket(randXs[i], randYs[i], 5, 100)]
+    console.log(rockets.length)
+    console.log(rockets)
     // setTimeout(() => {
     //   rockets = [...rockets, new_rocket]
     // }, 100 * i)
@@ -101,9 +102,13 @@ function keyPressed() {
     //   }
     // }
     if (i % 3 == 0) {
-      for (let i = rockets.length - 1; i >= 0; i--) {
-        rockets[i].update();
-        rockets[i].show();
+      for(let i = 0; i < rockets.length; i++) {
+        if (rockets[i].isRunning()) {
+          rockets[i].move();
+          rockets[i].display();
+        } else if (!rockets[i].isBlown()) {
+          rockets[i].blowUp();
+        }
       }
     }
   }
