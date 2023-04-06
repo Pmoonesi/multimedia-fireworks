@@ -12,15 +12,13 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, 700);
+  createCanvas(windowWidth, windowHeight);
   background(0);
 
   for (let i = 0; i < sounds.length; i++) {
     sounds[i].playMode('sustain')
   } 
 
-  // console.log('hi');
-  // console.error('pls');
 }
 
 function draw() { 
@@ -59,12 +57,21 @@ function mouseReleased() {
   rockets = [...rockets, new_rocket]
 }
 
+function batchLaunch(i, x_arr, y_arr) {
+  if (i >= x_arr.length) return;
+  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500)
+  rockets = [...rockets, new_rocket]
+  setTimeout(() => {
+    batchLaunch(i + 1, x_arr, y_arr);
+  }, 100)
+}
+
 function keyPressed() {
   if (key != '1' && key != '2' && key != '3') return;
   let randXs = []
   let randYs = []
-  // let count = 10 + random(10)
-  let count = 10
+  let count = 10 + random(10)
+  
   for (let i = 0; i < count; i++) {
     randXs = [...randXs, random(width)]
     randYs = [...randYs, (height - 50) - random(100)]
@@ -72,75 +79,13 @@ function keyPressed() {
   // if 1 is pressed, 10 to 20 random rockets are launched
   if (key == '2') {
     // if 2 is pressed, launch from right to left
-    randXs.sort((a, b) => a < b)
+    randXs.sort((a, b) => a - b)
   } else if (key == '3') {
     // if 3 is pressed, launch from left to right
-    randXs.sort((a, b) => a >= b)
+    randXs.sort((a, b) => b - a)
   }
-  console.log(randXs)
-  console.log(randYs)
-  batchLaunch(0, randXs, randYs);
-  // let new_rocket
-  // let last_tick = millis()
-  // let i = 0;
-  // while(i < count) {
-  //   now_tick = millis()
-  //   console.log(now_tick - last_tick)
-  //   if (now_tick - last_tick > 200) {
-  //     new_rocket = new Rocket(randXs[i], randYs[i], 5, 500)
-  //     rockets = [...rockets, new_rocket]
-  //     last_tick = millis()
-  //     i += 1
-  //   }
-  //   update_all();
-  // }
-  // for (let i = 0; i < count; i++) {
-  //   rockets = [...rockets, new Rocket(randXs[i], randYs[i], 5, 100)]
-  //   console.log(rockets.length)
-  //   console.log(rockets)
-    // if (i % 3 == 0) {
-    //   for(let j = 0; j < rockets.length; j++) {
-    //     console.log(`${j}th rocket being updated`)
-    //     if (!rockets[j].isReady()) {
-    //       console.log(`rocket number ${j} is not ready.`);
-    //       continue;
-    //     }
-    //     if (rockets[j].isRunning()) {
-    //       rockets[j].move();
-    //       rockets[j].display();
-    //       console.log(`rocket number ${j} is running.`);
-    //     } else if (rockets[j].isStopped()) {
-    //       rockets[j].blowUp();
-    //       console.log(`rocket number ${j} is stopped and ready to be blown up.`)
-    //     } else if (rockets[j].isBlownUp()) {
-    //       rockets.splice(j, 1);
-    //       console.log(`removed rocket number ${j} after blowing up.`)
-    //     }
-    //   }
-    // }
-    // if (i % 3 == 0) {
-    //   for(let i = 0; i < rockets.length; i++) {
-    //     console.log(`${i}th rocket being updated`)
-    //     if (!rockets[i].isReady) continue;
-    //     if (rockets[i].isRunning()) {
-    //       rockets[i].move();
-    //       rockets[i].display();
-    //     } else if (!rockets[i].isBlown()) {
-    //       rockets[i].blowUp();
-    //     }
-    //   }
-    // }
-  //   console.log('after update')
-  // }
-}
 
-function batchLaunch(i, x_arr, y_arr) {
-  if (i >= x_arr.length) return;
-  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500)
-  rockets = [...rockets, new_rocket]
-  setTimeout(() => {
-    batchLaunch(i + 1, x_arr, y_arr);
-  }, 200)
+  batchLaunch(0, randXs, randYs);
 }
 
 class Rocket {
