@@ -41,7 +41,7 @@ function update_all() {
       rockets[i].blowUp();
     } else if (rockets[i].isBlownUp()) {
       rockets.splice(i, 1);
-      console.log(`removed rocket number ${i} after blowing up.`)
+      // console.log(`removed rocket number ${i} after blowing up.`)
     }
   }
 }
@@ -81,7 +81,7 @@ function keyPressed() {
   let last_tick = millis()
   let i = 0;
   while(i < count) {
-    if (millis() - last_tick > 200) {
+    if (millis() - last_tick > 2000) {
       new_rocket = new Rocket(randXs[i], randYs[i], 5, 100)
       rockets = [...rockets, new_rocket]
       last_tick = millis()
