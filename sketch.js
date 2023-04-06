@@ -103,6 +103,7 @@ function keyPressed() {
     // }
     if (i % 3 == 0) {
       for(let i = 0; i < rockets.length; i++) {
+        console.log(`${i}th rocket being updated`)
         if (rockets[i].isRunning()) {
           rockets[i].move();
           rockets[i].display();
@@ -111,6 +112,7 @@ function keyPressed() {
         }
       }
     }
+    console.log('after update')
   }
 }
 
