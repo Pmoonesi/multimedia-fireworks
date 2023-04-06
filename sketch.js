@@ -132,11 +132,13 @@ class Rocket {
   }
 
   blowUp() {
-    this.state = 3
-    this.e.remove()
+    this.state = 3;
+    this.e.remove();
     // this.el.position(this.x, this.y);
     // this.el.show();
-    track = Math.floor(random(sounds.length))
+    track = Math.floor(random(sounds.length));
+    console.log(track);
+    console.log(sounds);
     sounds[track].play();
     push()
     translate(this.x, this.y)
