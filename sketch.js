@@ -138,11 +138,16 @@ function preparePieces() {
   return [ids, vs];
 }
 
+function randomRGB() {
+  return [Math.floor(random(256)), Math.floor(random(256)), Math.floor(random(256))]
+}
+
 class Rocket {
   constructor(x, y, ySpeed, launchRange) {
     this.e = null;
     this.trace = [];
     this.maxTraceLength = 30;
+    this.rgb = randomRGB();
     this.baseX = x;
     this.x = x;
     this.y = y;
@@ -185,12 +190,13 @@ class Rocket {
 
   display() {
     this.e.position(this.x, this.y);
-    strokeWeight(2);
 
+    strokeWeight(2);
+    let [r, g, b] = this.rgb;
     for (let i = 0; i < this.trace.length; i++) {
       let [x, y] = this.trace[i]
       let alpha = map(i, 0, this.trace.length, 15, 255)
-      stroke(255, 0, 0, alpha)
+      stroke(r, g, b, alpha)
       point(x, y);
     }
   }
@@ -208,27 +214,14 @@ class Rocket {
     let [ids, vs] = preparePieces();
     for (let i = 0; i < ids.length; i++){
       name = `./assets/pieces/p${ids[i]}.png`;
-      new_piece = new Piece(name, this.x, this.y, vs[i][0], vs[i][1]);
+      new_piece = new Piece(name, this.x, this.y, vs[i][0], vs[i][1], this.rgb);
       pieces.push(new_piece)
     }
-
-    // push();
-    // translate(this.x, this.y);
-    // fill(255, 255, 0);
-    // rect(0, 0, 65, 65);
-    // pop();
-    // setTimeout(() => {
-    //   push();
-    //   translate(this.x, this.y);
-    //   fill(0);
-    //   rect(0, 0, 65, 65);
-    //   pop();
-    // }, 1000);
   }
 }
 
 class Piece {
-  constructor(path, x, y, vx, vy) {
+  constructor(path, x, y, vx, vy, rgb) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -237,9 +230,15 @@ class Piece {
     this.ttl = 50;
     this.state = 0;
     this.piece = null;
+    this.height = 16;
+    this.width = 16;
+    this.trace = [];
+    this.maxTraceLength = 30;
+    this.rgb = rgb;
     createImg(path, `piece${x}`, "anonymous", (img) => {
       this.piece = img;
       this.state = 1;
+      console.log(this.piece.size())
     });
   }
 
@@ -263,6 +262,8 @@ class Piece {
       this.x < width &&
       this.ttl > 0
     ) {
+      this.trace.push([this.x + this.width / 2, this.y + this.height / 2])
+      if (this.trace.length > this.maxTraceLength) this.trace = this.trace.slice(1);
       this.y -= this.vy;
       this.x += this.vx;
       this.vy += this.ay;
@@ -278,6 +279,15 @@ class Piece {
     this.piece.style("opacity", `${op}`);
     this.piece.position(this.x, this.y);
     pop();
+
+    strokeWeight(2);
+    let [r, g, b] = this.rgb;
+    for (let i = 0; i < this.trace.length; i++) {
+      let [x, y] = this.trace[i]
+      let alpha = map(i, 0, this.trace.length, 15, 255)
+      stroke(r, g, b, alpha)
+      point(x, y);
+    }
   }
 
   cleanUp() {
