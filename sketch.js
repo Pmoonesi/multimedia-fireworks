@@ -146,7 +146,7 @@ class Rocket {
   constructor(x, y, ySpeed, launchRange) {
     this.e = null;
     this.trace = [];
-    this.maxTraceLength = 30;
+    this.maxTraceLength = 20;
     this.rgb = randomRGB();
     this.baseX = x;
     this.x = x;
@@ -237,8 +237,10 @@ class Piece {
     this.rgb = rgb;
     createImg(path, `piece${x}`, "anonymous", (img) => {
       this.piece = img;
+      let size = this.piece.size();
+      this.width = size.width;
+      this.height = size.height;
       this.state = 1;
-      console.log(this.piece.size())
     });
   }
 
