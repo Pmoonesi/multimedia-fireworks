@@ -1,5 +1,4 @@
 let p = "assets/rocket.png";
-let f = "assets/firework.gif";
 let pieces_count = 10;
 let rocket_width = 64;
 let chance = 0.01;
@@ -26,18 +25,16 @@ function windowResized() {
 
 function draw() {
   background(0);
-  // updates animation frames by using an html
-  // img element, positioning it over top of
-  // the canvas.
-  update_all();
 
+  update_all();
   if (random() < chance) launch_random_rocket();
 }
 
 function launch_random_rocket() {
   let rand_x = 50 + Math.floor(random(windowWidth - 100))
   let rand_r = 200 + Math.floor(random(windowHeight - 250))
-  let new_rocket = new Rocket(rand_x - rocket_width / 2, windowHeight - 50, 5, rand_r);
+  let rand_v = 3 + Math.floor(random(4))
+  let new_rocket = new Rocket(rand_x - rocket_width / 2, windowHeight - 50, rand_v, rand_r);
   rockets = [...rockets, new_rocket];
 }
 
@@ -75,13 +72,15 @@ function mouseReleased() {
   end = millis();
   dif = min(end - start, 3000);
   let range = map(dif, 0, 3000, 100, height); 
-  let new_rocket = new Rocket(mouseX - rocket_width / 2, mouseY - rocket_width / 2, 5, range);
+  let rand_v = 3 + Math.floor(random(4))
+  let new_rocket = new Rocket(mouseX - rocket_width / 2, mouseY - rocket_width / 2, rand_v, range);
   rockets = [...rockets, new_rocket];
 }
 
 function batchLaunch(i, x_arr, y_arr) {
   if (i >= x_arr.length) return;
-  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500); 
+  let rand_v = 3 + Math.floor(random(4))
+  new_rocket = new Rocket(x_arr[i], y_arr[i], rand_v, 500); 
   rockets = [...rockets, new_rocket];
   setTimeout(() => {
     batchLaunch(i + 1, x_arr, y_arr);
@@ -92,7 +91,7 @@ function keyPressed() {
   if (key != "1" && key != "2" && key != "3") return;
   let randXs = [];
   let randYs = [];
-  let count = 10 + random(10);
+  let count = 10 + Math.floor(random(10));
 
   for (let i = 0; i < count; i++) {
     randXs = [...randXs, random(width)];
@@ -148,12 +147,13 @@ class Rocket {
     this.trace = [];
     this.maxTraceLength = 20;
     this.rgb = randomRGB();
+    this.explosionRange = 30 + Math.floor(random(30))
     this.baseX = x;
     this.x = x;
     this.y = y;
     this.ySpeed = ySpeed;
     this.launchRange = launchRange;
-    this.state = 0; // 0: not initialized, 1: launched, 2: stopped, 3: blown
+    this.state = 0; // 0: not initialized, 1: launched, 2: stopped, 3: blown up
     createImg(p, `test${x}`, "anonymous", (img) => {
       this.e = img;
       this.state = 1;
@@ -214,20 +214,20 @@ class Rocket {
     let [ids, vs] = preparePieces();
     for (let i = 0; i < ids.length; i++){
       name = `./assets/pieces/p${ids[i]}.png`;
-      new_piece = new Piece(name, this.x, this.y, vs[i][0], vs[i][1], this.rgb);
+      new_piece = new Piece(name, this.x, this.y, vs[i][0], vs[i][1], this.rgb, this.explosionRange);
       pieces.push(new_piece)
     }
   }
 }
 
 class Piece {
-  constructor(path, x, y, vx, vy, rgb) {
+  constructor(path, x, y, vx, vy, rgb, ttl) {
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
     this.ay = -0.1;
-    this.ttl = 50;
+    this.ttl = ttl;
     this.state = 0;
     this.piece = null;
     this.height = 16;
