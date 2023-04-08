@@ -2,6 +2,7 @@ let p = "assets/rocket.png";
 let f = "assets/firework.gif";
 let pieces_count = 10;
 let rocket_width = 64;
+let chance = 0.01;
 
 let sounds = [];
 let rockets = [];
@@ -28,6 +29,15 @@ function draw() {
   // img element, positioning it over top of
   // the canvas.
   update_all();
+
+  if (random() < chance) launch_random_rocket();
+}
+
+function launch_random_rocket() {
+  let rand_x = 50 + Math.floor(random(windowWidth - 100))
+  let rand_r = 200 + Math.floor(random(windowHeight - 250))
+  let new_rocket = new Rocket(rand_x - rocket_width / 2, windowHeight - 50, 5, rand_r);
+  rockets = [...rockets, new_rocket];
 }
 
 function update_all() {
@@ -63,14 +73,14 @@ function mousePressed() {
 function mouseReleased() {
   end = millis();
   dif = min(end - start, 3000);
-  let range = map(dif, 0, 3000, 100, height); //TODO: stay inside the screen
-  let new_rocket = new Rocket(mouseX - 32, mouseY - 32, 5, range);
+  let range = map(dif, 0, 3000, 100, height); 
+  let new_rocket = new Rocket(mouseX - rocket_width / 2, mouseY - rocket_width / 2, 5, range);
   rockets = [...rockets, new_rocket];
 }
 
 function batchLaunch(i, x_arr, y_arr) {
   if (i >= x_arr.length) return;
-  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500); //TODO: stay inside the screen
+  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500); 
   rockets = [...rockets, new_rocket];
   setTimeout(() => {
     batchLaunch(i + 1, x_arr, y_arr);
@@ -85,7 +95,7 @@ function keyPressed() {
 
   for (let i = 0; i < count; i++) {
     randXs = [...randXs, random(width)];
-    randYs = [...randYs, height - 50 - random(100)]; //TODO: stay inside the screen
+    randYs = [...randYs, height - 50 - random(100)]; 
   }
   // if 1 is pressed, 10 to 20 random rockets are launched
   if (key == "2") {
@@ -158,7 +168,7 @@ class Rocket {
     return this.state == 3;
   }
 
-  move() { //TODO: stay inside the screen
+  move() { 
     if (this.y >= 0 && this.y < height && this.launchRange > 0) {
       this.y -= this.ySpeed;
       this.launchRange -= this.ySpeed;
@@ -232,7 +242,7 @@ class Piece {
     return this.state == 2;
   }
 
-  move() { //TODO: stay inside the screen
+  move() {
     if (
       this.y >= 0 &&
       this.y < height &&
