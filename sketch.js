@@ -1,6 +1,7 @@
 let p = "assets/rocket.png";
 let f = "assets/firework.gif";
 let pieces_count = 10;
+let rocket_width = 64;
 
 let sounds = [];
 let rockets = [];
@@ -14,6 +15,11 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  background(0);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
   background(0);
 }
 
@@ -57,14 +63,14 @@ function mousePressed() {
 function mouseReleased() {
   end = millis();
   dif = min(end - start, 3000);
-  let range = map(dif, 0, 3000, 100, height);
+  let range = map(dif, 0, 3000, 100, height); //TODO: stay inside the screen
   let new_rocket = new Rocket(mouseX - 32, mouseY - 32, 5, range);
   rockets = [...rockets, new_rocket];
 }
 
 function batchLaunch(i, x_arr, y_arr) {
   if (i >= x_arr.length) return;
-  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500);
+  new_rocket = new Rocket(x_arr[i], y_arr[i], 5, 500); //TODO: stay inside the screen
   rockets = [...rockets, new_rocket];
   setTimeout(() => {
     batchLaunch(i + 1, x_arr, y_arr);
@@ -79,7 +85,7 @@ function keyPressed() {
 
   for (let i = 0; i < count; i++) {
     randXs = [...randXs, random(width)];
-    randYs = [...randYs, height - 50 - random(100)];
+    randYs = [...randYs, height - 50 - random(100)]; //TODO: stay inside the screen
   }
   // if 1 is pressed, 10 to 20 random rockets are launched
   if (key == "2") {
@@ -152,11 +158,11 @@ class Rocket {
     return this.state == 3;
   }
 
-  move() {
+  move() { //TODO: stay inside the screen
     if (this.y >= 0 && this.y < height && this.launchRange > 0) {
       this.y -= this.ySpeed;
       this.launchRange -= this.ySpeed;
-      this.x = this.baseX + 10 * sin(this.y / 40);
+      this.x = this.baseX + 4 * sin(this.y / 20);
     } else {
       this.state = 2;
     }
@@ -183,18 +189,18 @@ class Rocket {
       pieces.push(new_piece)
     }
 
-    push();
-    translate(this.x, this.y);
-    fill(255, 255, 0);
-    rect(0, 0, 65, 65);
-    pop();
-    setTimeout(() => {
-      push();
-      translate(this.x, this.y);
-      fill(0);
-      rect(0, 0, 65, 65);
-      pop();
-    }, 1000);
+    // push();
+    // translate(this.x, this.y);
+    // fill(255, 255, 0);
+    // rect(0, 0, 65, 65);
+    // pop();
+    // setTimeout(() => {
+    //   push();
+    //   translate(this.x, this.y);
+    //   fill(0);
+    //   rect(0, 0, 65, 65);
+    //   pop();
+    // }, 1000);
   }
 }
 
@@ -226,7 +232,7 @@ class Piece {
     return this.state == 2;
   }
 
-  move() {
+  move() { //TODO: stay inside the screen
     if (
       this.y >= 0 &&
       this.y < height &&
