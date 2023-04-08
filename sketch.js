@@ -25,6 +25,7 @@ function windowResized() {
 }
 
 function draw() {
+  background(0);
   // updates animation frames by using an html
   // img element, positioning it over top of
   // the canvas.
@@ -140,6 +141,8 @@ function preparePieces() {
 class Rocket {
   constructor(x, y, ySpeed, launchRange) {
     this.e = null;
+    this.trace = [];
+    this.maxTraceLength = 30;
     this.baseX = x;
     this.x = x;
     this.y = y;
@@ -170,6 +173,8 @@ class Rocket {
 
   move() { 
     if (this.y >= 0 && this.y < height && this.launchRange > 0) {
+      this.trace.push([this.x + rocket_width / 2, this.y + rocket_width / 2])
+      if (this.trace.length > this.maxTraceLength) this.trace = this.trace.slice(1);
       this.y -= this.ySpeed;
       this.launchRange -= this.ySpeed;
       this.x = this.baseX + 4 * sin(this.y / 20);
@@ -180,6 +185,14 @@ class Rocket {
 
   display() {
     this.e.position(this.x, this.y);
+    strokeWeight(2);
+
+    for (let i = 0; i < this.trace.length; i++) {
+      let [x, y] = this.trace[i]
+      let alpha = map(i, 0, this.trace.length, 15, 255)
+      stroke(255, 0, 0, alpha)
+      point(x, y);
+    }
   }
 
   blowUp() {
