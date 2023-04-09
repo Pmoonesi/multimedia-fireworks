@@ -111,10 +111,10 @@ function mouseReleased() {
 /**
  * this method launches a batch of rockets with a delay between every launch. It calls itself recursively in a setTimeout
  * to induce a sense of ordering in the launched rockets.
- * @param {ith rocket that is being launched in this batch.} i 
- * @param {array of Xs of launching points of the rockets in this batch.} x_arr 
- * @param {array of Xs of launching points of the rockets in this batch.} y_arr 
- * @returns
+ * @param {number} i - rocket that is being launched in this batch.
+ * @param {number[]} x_arr - array of Xs of launching points of the rockets in this batch.
+ * @param {number[]} y_arr - array of Ys of launching points of the rockets in this batch.
+ * @returns nothing.
  */
 function batchLaunch(i, x_arr, y_arr) {
   if (i >= x_arr.length) return;
@@ -130,7 +130,7 @@ function batchLaunch(i, x_arr, y_arr) {
  * on every keyboard key event, it checks if we pressed 1, 2 or 3. selects a random number of rockets to be launched.
  * then, creates the random starting points. if we press 2, we sort the X's array in an ascending order and if we press 3,
  * we sort it in a descending order. after that, we launch the specified number of rockets using the batchLaunch method.
- * @returns 
+ * @returns nothing
  */
 function keyPressed() {
   if (key != "1" && key != "2" && key != "3") return;
@@ -156,8 +156,8 @@ function keyPressed() {
 
 /**
  * returns true if the element exist in the array and false otherwise.
- * @param {array to look into.} arr 
- * @param {element we want to find in the array.} el 
+ * @param {object[]} arr - array to look into. 
+ * @param {object} el - element we want to find in the array. 
  * @returns true if the element exist in the array and false otherwise.
  */
 function checkExistance(arr, el) {
@@ -208,10 +208,10 @@ function randomRGB() {
 class Rocket {
   /**
    * initialize the rocket
-   * @param {starting point's x} x 
-   * @param {starting point's y} y 
-   * @param {speed of the rocket} ySpeed 
-   * @param {final height of the rocket} launchRange 
+   * @param {number} x - starting point's x
+   * @param {number} y - starting point's y
+   * @param {number} ySpeed - speed of the rocket 
+   * @param {number} launchRange - final height of the rocket
    */
   constructor(x, y, ySpeed, launchRange) {
     this.e = null; // the rocket element/object
@@ -324,14 +324,14 @@ class Rocket {
  */
 class Piece {
   /**
-   * 
-   * @param {path to image of the piece} path 
-   * @param {starting point's x} x 
-   * @param {starting point's y} y 
-   * @param {velocity in x direction} vx 
-   * @param {velocity in y direction} vy 
-   * @param {color of the trace} rgb 
-   * @param {piece's time to live/range of explosion} ttl 
+   * initialize the piece
+   * @param {string} path - path to image of the piece
+   * @param {number} x - starting point's x
+   * @param {number} y - starting point's y 
+   * @param {number} vx - velocity in x direction 
+   * @param {number} vy - velocity in y direction 
+   * @param {number[]} rgb - color of the trace 
+   * @param {number} ttl - piece's time to live/range of explosion 
    */
   constructor(path, x, y, vx, vy, rgb, ttl) {
     this.x = x; // current x of the piece
