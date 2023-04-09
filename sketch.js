@@ -1,28 +1,41 @@
-let p = "assets/rocket.png";
-let pieces_count = 10;
-let rocket_width = 64;
-let chance = 0.01;
+let p = "assets/rocket.png"; // path to rocket image.
+let pieces_count = 10; // number of different pieces prepared in assets/pieces folder.
+let rocket_width = 64; // width of rocket image. could be obtained using rocket.size().width too.
+let chance = 0.01; // the chance of a rocket being randomly launched in a frame.
 
-let sounds = [];
-let rockets = [];
-let pieces = [];
+let sounds = []; // array containing 5 different sounds of fireworks
+let rockets = []; // array containing rocket objects
+let pieces = []; // array containing rocket pieces objects
 
+/**
+ * before execution of the code, this function loads the sound files.
+ */
 function preload() {
   for (let i = 0; i < 5; i++) {
     sounds[i] = loadSound(`assets/fizz_${i}.mp3`);
   }
 }
 
+/**
+ * this function executes at the start of program and creates the black background.
+ */
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(0);
 }
 
+/**
+ * this function makes sure the black background is fit to the window screen.
+ */
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   background(0);
 }
 
+/**
+ * this function executes every frame. clears the screen. then, draws 
+ * all the rockets and pieces and then, launches a random rocket if needed.
+ */
 function draw() {
   background(0);
 
@@ -30,6 +43,9 @@ function draw() {
   if (random() < chance) launch_random_rocket();
 }
 
+/**
+ * launch a rocket from a random x with a random height and a random velocity.
+ */
 function launch_random_rocket() {
   let rand_x = 50 + Math.floor(random(windowWidth - 100))
   let rand_r = 200 + Math.floor(random(windowHeight - 250))
@@ -38,6 +54,13 @@ function launch_random_rocket() {
   rockets = [...rockets, new_rocket];
 }
 
+/**
+ * loop through all rockets and pieces and act upon what situation they are in.
+ * if they are not initialized yet, don't do anything. else move and display them if they should still move.
+ * for the rockets, if they reached their final destination, blow them up and if they are already blown up,
+ * just remove them from the array of rockets.
+ * for the pieces, if they are done moving, we just remove their objects from screen and pieces array.
+ */
 function update_all() {
   for (let i = 0; i < rockets.length; i++) {
     if (!rockets[i].isReady()) continue;
@@ -63,11 +86,19 @@ function update_all() {
   }
 }
 
-let start, end;
+let start, end; // time of start and end of a mouse click event in miliseconds.
+
+/**
+ * set the start time of a mouse click.
+ */
 function mousePressed() {
   start = millis();
 }
 
+/**
+ * set the end time of a mouse click and then, launch a rocket from the mouse released position with a random velocity
+ * and a height proportional to the amount of time user kept pressing the mouse button. maximum time is 3 seconds.
+ */
 function mouseReleased() {
   end = millis();
   dif = min(end - start, 3000);
@@ -77,6 +108,14 @@ function mouseReleased() {
   rockets = [...rockets, new_rocket];
 }
 
+/**
+ * this method launches a batch of rockets with a delay between every launch. It calls itself recursively in a setTimeout
+ * to induce a sense of ordering in the launched rockets.
+ * @param {ith rocket that is being launched in this batch.} i 
+ * @param {array of Xs of launching points of the rockets in this batch.} x_arr 
+ * @param {array of Xs of launching points of the rockets in this batch.} y_arr 
+ * @returns
+ */
 function batchLaunch(i, x_arr, y_arr) {
   if (i >= x_arr.length) return;
   let rand_v = 3 + Math.floor(random(4))
@@ -87,6 +126,12 @@ function batchLaunch(i, x_arr, y_arr) {
   }, 100);
 }
 
+/**
+ * on every keyboard key event, it checks if we pressed 1, 2 or 3. selects a random number of rockets to be launched.
+ * then, creates the random starting points. if we press 2, we sort the X's array in an ascending order and if we press 3,
+ * we sort it in a descending order. after that, we launch the specified number of rockets using the batchLaunch method.
+ * @returns 
+ */
 function keyPressed() {
   if (key != "1" && key != "2" && key != "3") return;
   let randXs = [];
@@ -109,10 +154,22 @@ function keyPressed() {
   batchLaunch(0, randXs, randYs);
 }
 
+/**
+ * returns true if the element exist in the array and false otherwise.
+ * @param {array to look into.} arr 
+ * @param {element we want to find in the array.} el 
+ * @returns true if the element exist in the array and false otherwise.
+ */
 function checkExistance(arr, el) {
   return arr.some((arrEl) => (arrEl[0] === el[0] && arrEl[1] === el[1]));
 }
 
+/**
+ * specify a random number of pieces to be thrown after a rocket blows up. and then,
+ * selects them randomly among the available piece images. and also selects their constant time 
+ * velocities in x and y direction. it is done in a fasion that no id or pair of velocities are duplicate.
+ * @returns an array containing the array of piece IDs and the array of velocities.
+ */
 function preparePieces() {
   let count = 3 + Math.floor(random(pieces_count - 3));
   let ids = [];
@@ -137,45 +194,81 @@ function preparePieces() {
   return [ids, vs];
 }
 
+/**
+ * create an array that contains random r, g and b values and represents a random color.
+ * @returns an array that contains random r, g and b values and represents a random color.
+ */
 function randomRGB() {
   return [Math.floor(random(256)), Math.floor(random(256)), Math.floor(random(256))]
 }
 
+/**
+ * Rocket class :D
+ */
 class Rocket {
+  /**
+   * initialize the rocket
+   * @param {starting point's x} x 
+   * @param {starting point's y} y 
+   * @param {speed of the rocket} ySpeed 
+   * @param {final height of the rocket} launchRange 
+   */
   constructor(x, y, ySpeed, launchRange) {
-    this.e = null;
-    this.trace = [];
-    this.maxTraceLength = 20;
-    this.rgb = randomRGB();
-    this.explosionRange = 30 + Math.floor(random(30))
-    this.baseX = x;
-    this.x = x;
-    this.y = y;
-    this.ySpeed = ySpeed;
-    this.launchRange = launchRange;
+    this.e = null; // the rocket element/object
+    this.trace = []; // array of the rocket's trace points
+    this.maxTraceLength = 20; // length of the trace
+    this.rgb = randomRGB(); // color of the trace
+    this.explosionRange = 30 + Math.floor(random(30)) // number of frames a piece is displayed after rocket is blown up, it is the same as explosion range.
+    this.baseX = x; // launching point's x
+    this.x = x; // current x of the rocket
+    this.y = y; // current y of the rocket
+    this.ySpeed = ySpeed; // speed of the rocket
+    this.launchRange = launchRange; // final height of the rocket
     this.state = 0; // 0: not initialized, 1: launched, 2: stopped, 3: blown up
+    // set the image object when it is loaded and set the state as launched (1).
     createImg(p, `test${x}`, "anonymous", (img) => {
       this.e = img;
       this.state = 1;
     });
   }
 
+  /**
+   * return false if the object is not ready to be used and true otherwise.
+   * @returns false if the object is not ready to be used and true otherwise.
+   */
   isReady() {
     return this.state != 0;
   }
 
+  /**
+   * return true if the object is in the launched state.
+   * @returns true if the object is in the launched state.
+   */
   isRunning() {
     return this.state == 1;
   }
 
+  /**
+   * return true if the object is in the stopped state.
+   * @returns true if the object is in the stopped state.
+   */
   isStopped() {
     return this.state == 2;
   }
 
+  /**
+   * return true if the object is the blown up state.
+   * @returns true if the object is the blown up state.
+   */
   isBlownUp() {
     return this.state == 3;
   }
 
+  /**
+   * check if the rocket is in the screen and has not yet reached it's final height.
+   * if the condition is true, adds the current position to the traces and moves one more step.
+   * if the condition is false, we change the state to stopped state.
+   */
   move() { 
     if (this.y >= 0 && this.y < height && this.launchRange > 0) {
       this.trace.push([this.x + rocket_width / 2, this.y + rocket_width / 2])
@@ -188,6 +281,9 @@ class Rocket {
     }
   }
 
+  /**
+   * first we display the rocket itself and then, display the trace. the more recent traces are stronger than the older ones.
+   */
   display() {
     this.e.position(this.x, this.y);
 
@@ -201,6 +297,9 @@ class Rocket {
     }
   }
 
+  /**
+   * in this method we remove the rocket object, play the firework sound and create the rockets pieces after explosion.
+   */
   blowUp() {
     this.state = 3;
     this.e.remove();
@@ -220,21 +319,35 @@ class Rocket {
   }
 }
 
+/**
+ * Piece class :P
+ */
 class Piece {
+  /**
+   * 
+   * @param {path to image of the piece} path 
+   * @param {starting point's x} x 
+   * @param {starting point's y} y 
+   * @param {velocity in x direction} vx 
+   * @param {velocity in y direction} vy 
+   * @param {color of the trace} rgb 
+   * @param {piece's time to live/range of explosion} ttl 
+   */
   constructor(path, x, y, vx, vy, rgb, ttl) {
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.ay = -0.1;
-    this.ttl = ttl;
-    this.state = 0;
-    this.piece = null;
-    this.height = 16;
-    this.width = 16;
-    this.trace = [];
-    this.maxTraceLength = 30;
-    this.rgb = rgb;
+    this.x = x; // current x of the piece
+    this.y = y; // current y of the piece
+    this.vx = vx; // velocity in x direction
+    this.vy = vy; // velocity in y direction
+    this.ay = -0.1; // acceleration in y direction
+    this.ttl = ttl; // remaining time to live
+    this.state = 0; // 0: not initialized, 1: moving, 2: stopped
+    this.piece = null; // image object of the piece
+    this.height = 16; // initial value of the height of the image
+    this.width = 16; // initial value of the width of the image
+    this.trace = []; // array of piece's traces
+    this.maxTraceLength = 30; // length of the trace
+    this.rgb = rgb; // the color of the trace
+    // set the image object when it is loaded and then set the width and height of the image and also set the state to moving
     createImg(path, `piece${x}`, "anonymous", (img) => {
       this.piece = img;
       let size = this.piece.size();
@@ -244,18 +357,35 @@ class Piece {
     });
   }
 
+  /**
+   * return false if the object is not ready to be used and true otherwise.
+   * @returns false if the object is not ready to be used and true otherwise.
+   */
   isReady() {
     return this.state != 0;
   }
 
+  /**
+   * return true if the object is in the moving state.
+   * @returns true if the object is in the moving state.
+   */
   isRunning() {
     return this.state == 1;
   }
 
+  /**
+   * return true if the object is in the stopped state.
+   * @returns true if the object is in the stopped state.
+   */
   isDone() {
     return this.state == 2;
   }
 
+  /**
+   * check if the piece is in the screen and has more time to live.
+   * if the condition is true, adds the current position to the traces and moves one more step.
+   * if the condition is false, we change the state to stopped state.
+   */
   move() {
     if (
       this.y >= 0 &&
@@ -275,6 +405,10 @@ class Piece {
     }
   }
 
+  /**
+   * first we display the piece with opacity proportional to it's ttl and then, display the trace. 
+   * the more recent traces are stronger than the older ones.
+   */
   display() {
     let op = map(this.ttl, 0, 50, 0, 1);
     push();
@@ -292,6 +426,9 @@ class Piece {
     }
   }
 
+  /**
+   * this function removes the image element of the piece.
+   */
   cleanUp() {
     this.piece.remove();
   }
